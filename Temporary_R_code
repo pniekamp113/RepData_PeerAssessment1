@@ -1,0 +1,43 @@
+library(ggplot2)
+library(dplyr)
+
+getwd()
+
+setwd("C:\\Users\\Patrick Niekamp\\Desktop\\Data Science Series\\Assignment\\repdata_data_activity")
+list.files()
+
+data <- read.csv("activity.csv")
+
+head(data)
+
+#differences in activity patterns between weekdays and weekends
+
+data$date <- as.Date(data$date) #already done
+
+data$day_of_the_week <- weekdays(data$date)
+
+head(data)
+
+#create the "weekend_or_weekday" variable
+
+data$weekday_or_weekend <- ifelse(data$day_of_the_week %in% c("Saturday", "Sunday"), "Weekend", "Weekday")
+
+head(data)
+table(data$weekday_or_weekend)
+
+#calculate average number of steps for each 5min interval for weekend and weekday
+
+Average <- data %>%
+  group_by(interval, weekday_or_weekend) %>%
+  summarize(Average = mean(steps, na.rm = TRUE))
+
+Average
+
+ggplot(Average, aes(x = interval, y = Average)) +
+  geom_line() +
+  facet_wrap(~weekday_or_weekend, ncol = 1, scales = "free_y") +
+  labs(title = "Average Daily Steps by Interval",
+       x = "5-Minute Interval",
+       y = "Average Number of Steps") +
+  theme_minimal()
+
