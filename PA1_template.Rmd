@@ -118,8 +118,7 @@ data_filled <- data %>%
     mutate(steps = ifelse(is.na(steps), interval_steps, steps)) %>%
     select(-interval_steps)
 sum(is.na(data_filled$steps))
-
-data_filled
+head(data_filled)
 
 ```
 
